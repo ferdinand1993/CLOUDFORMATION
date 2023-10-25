@@ -1,0 +1,97 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: this template provisions our dev network environment
+Metadata: {}
+
+Parameters: 
+  # Dev VPC parameter
+  DevVpcCidrBlockPara:
+    Description: Please provide your Dev VPC cidrBlock
+    Type: String
+    Default: 10.0.0.0/16
+
+  # Dev EnableDnsSupport parameter
+  DevVpcEnableDnsSupport:
+    Description: please enable Dns support(true/false)
+    Type: String
+  
+  # WebServer subnet AZ parameter
+  DevWebServerSubnetAZPara:
+    Description: Please select an AZ of your choice for the Dev webserver subnet  
+    Type: AWS::EC2::AvailabilityZone::Name
+     
+  # webser subnet cidrblock for Dev
+  DevWebServerSubnetCidrBlockPara:
+    Description: Please provide the cidr block for your dev webserver subnet 
+    Type: String
+
+  # APP server subnet AZ parameter
+  DevAppServerSubnetAZPara:
+    Description: Please select an AZ of your choice for the Dev appserver subnet  
+    Type: AWS::EC2::AvailabilityZone::Name
+
+  # APP sever subnet cidr block parameter
+  DevAppServerSubnetCidrBlockPara:
+    Description: Please provide the cidr block for your dev Appserver subnet 
+    Type: String
+
+  # DB server subnet AZ parameter
+  DevDBServerSubnetAZPara:
+    Description: Please select an AZ of your choice for the Dev DB server subnet  
+    Type: AWS::EC2::AvailabilityZone::Name
+
+  # DB sever subnet cidr block parameter
+  DevDBServerSubnetCidrBlockPara:
+    Description: Please provide the cidr block for your dev Appserver subnet 
+    Type: String
+  
+    
+
+Mappings: {}
+
+Conditions: {}
+
+Resources: 
+  #development vpc
+  DevVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref DevVpcCidrBlockPara
+      EnableDnsSupport: !Ref DevVpcEnableDnsSupport
+      Tags:
+        - Key: Name
+          Value: DevVpc
+
+  # Webserver subnet
+  DevWebServerSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref DevWebServerSubnetAZPara
+      VpcId: !Ref DevVpc                # its like resoucetype.resourcename.attribute in terraform when your want to reference vpc
+      CidrBlock: !Ref DevWebServerSubnetCidrBlockPara
+      Tags:
+        - Key: Name
+          Value: DevWebServerSubnet    # it must not always reflect the logical name/logical ID
+
+  # appserver subnet
+  DevAppSeverSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref DevAppServerSubnetAZPara
+      VpcId: !Ref DevVpc
+      CidrBlock: !Ref DevAppServerSubnetCidrBlockPara
+      Tags:
+        - Key: Name
+          Value: DevAppSeverSubnet
+
+  # database subnet
+  DevDBServerSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref DevDBServerSubnetAZPara
+      VpcId: !Ref DevVpc
+      CidrBlock: !Ref DevDBServerSubnetCidrBlockPara
+      Tags:
+        - Key: Name
+          Value: DevDBServerSubnet
+
+Outputs: {}
